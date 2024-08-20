@@ -44,11 +44,6 @@ registrationSchema.pre("save", async function (next) {
       next(err); // Propagate the error to the next middleware or route handler
     }
   } else {
-    // Convert the email to lowercase before saving
-    if (this.isModified("email")) {
-      this.email = this.email.toLowerCase();
-    }
-
     next();
   }
 });
