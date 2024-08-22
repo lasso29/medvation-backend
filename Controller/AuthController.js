@@ -38,15 +38,15 @@ module.exports.registration = async (req, res) => {
 
 module.exports.Login = async (req, res) => {
   console.log(req.body);
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
   try {
     const user = await registrationModel
-      .findOne({ email })
-      .select("+email +password");
+      .findOne({ email, role })
+      .select("+email +password +userName +role");
 
     if (!user) {
       // User with the provided email does not exist
-      res.send("Invalid email");
+      res.send("Invalid Credential");
     } else {
       // Compare the provided password with the hashed password stored in the database
       const passwordMatch = await bcrypt.compare(password, user.password);
@@ -56,6 +56,11 @@ module.exports.Login = async (req, res) => {
       } else {
         // Passwords match, login successful
         // const newUser = await getDUser(req, res, email);
+        const newUser = {
+          email: user.email,
+          userName: user.userName,
+          role: user.role,
+        };
 
         const userToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,
@@ -66,8 +71,8 @@ module.exports.Login = async (req, res) => {
         });
 
         const token = userToken.split("").reverse().join("");
-        console.log(token);
-        res.send({ message: "Login successfully", token });
+        // console.log(token);
+        res.send({ message: "Login successfully", token, newUser });
       }
     }
   } catch (error) {

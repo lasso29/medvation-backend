@@ -10,7 +10,7 @@ const registrationSchema = new mongoose.Schema(
     email: {
       type: String,
       default: "",
-      unique: true, // Ensure email uniqueness
+      // unique: true, // Ensure email uniqueness
       lowercase: true, // Store email in lowercase
       required: true,
       select: false,
@@ -48,6 +48,6 @@ registrationSchema.pre("save", async function (next) {
   }
 });
 
-const registrationModel = mongoose.model("student", registrationSchema);
+const registrationModel = mongoose.model("registration", registrationSchema);
 
 module.exports = registrationModel;
